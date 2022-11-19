@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/bypepe77/api/internal/module/posts"
 	"github.com/bypepe77/api/internal/module/user"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -48,4 +49,7 @@ func (s *Server) registerRoutes() {
 	// Initialize User routes
 	userRoutes := user.NewUserRouteController(s.log, s.db, *s.engine.Group("/user"))
 	userRoutes.RegisterUserRoutes()
+
+	postRoutes := posts.NewPostRouteController(s.log, s.db, *s.engine.Group("/post"))
+	postRoutes.RegisterPostRoutes()
 }
