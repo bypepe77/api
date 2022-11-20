@@ -1,7 +1,6 @@
 package user
 
 import (
-	"github.com/bypepe77/api/internal/module/user/controller"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -11,7 +10,7 @@ type UserRouteController struct {
 	log            *logrus.Logger
 	db             gorm.DB
 	r              gin.RouterGroup
-	userController controller.UserController
+	userController UserControllerInterface
 }
 
 func NewUserRouteController(log *logrus.Logger, db gorm.DB, r gin.RouterGroup) *UserRouteController {
@@ -19,7 +18,7 @@ func NewUserRouteController(log *logrus.Logger, db gorm.DB, r gin.RouterGroup) *
 		log:            log,
 		db:             db,
 		r:              r,
-		userController: *controller.NewUserController(),
+		userController: NewUserController(db),
 	}
 }
 

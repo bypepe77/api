@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/bypepe77/api/internal/common/models"
 	_ "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -22,6 +23,8 @@ func DatabaseConection() gorm.DB {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	db.AutoMigrate(&models.Post{}, &models.User{}, &models.Comment{}, &models.Follow{})
 
 	return *db
 }
