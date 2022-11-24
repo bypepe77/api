@@ -23,5 +23,6 @@ func NewUserRouteController(log *logrus.Logger, db gorm.DB, r gin.RouterGroup) *
 }
 
 func (urc *UserRouteController) RegisterUserRoutes() {
-	urc.r.GET("/test", urc.userController.GetUser)
+	urc.r.POST("/create", urc.userController.CreateUser)
+	urc.r.GET("/:id", urc.userController.GetUser)
 }
