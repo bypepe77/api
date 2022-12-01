@@ -48,7 +48,7 @@ func (uc *UserController) Create(c *gin.Context) {
 }
 
 func (uc *UserController) GetUser(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param("username")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorIDNull})
 		return
