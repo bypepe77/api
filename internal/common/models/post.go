@@ -6,14 +6,12 @@ import (
 
 type Post struct {
 	gorm.Model
-	Slug        string `gorm:"unique_index;not null"`
-	Title       string `gorm:"not null"`
-	Description string
-	Body        string
-	Author      User
-	AuthorID    uint
-	Comments    []Comment `gorm:"foreignkey:PostID"`
-	Favorites   []User    `gorm:"many2many:favorites;"`
+	Slug           string `gorm:"unique_index;not null"`
+	Body           string
+	Author         User
+	AuthorID       uint
+	CommentCount   int64
+	FavoritesCount int64
 }
 
 type Comment struct {

@@ -11,7 +11,7 @@ import (
 const (
 	ErrorCreatingUser    = "Error creating user"
 	ErrorIDNull          = "ID can't be blank"
-	ErrorGettingUserById = "Error finding this username"
+	ErrorGettingUserById = "User not found"
 )
 
 type UserControllerInterface interface {
