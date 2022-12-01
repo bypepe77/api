@@ -15,7 +15,7 @@ const (
 )
 
 type UserControllerInterface interface {
-	CreateUser(c *gin.Context)
+	Create(c *gin.Context)
 	GetUser(c *gin.Context)
 }
 
@@ -31,7 +31,7 @@ func NewUserController(db gorm.DB) UserControllerInterface {
 	}
 }
 
-func (uc *UserController) CreateUser(c *gin.Context) {
+func (uc *UserController) Create(c *gin.Context) {
 	var requestBody *models.User
 
 	if err := c.BindJSON(&requestBody); err != nil {
