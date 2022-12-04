@@ -41,10 +41,18 @@ func (uc *UserController) Create(c *gin.Context) {
 }
 
 func (uc *UserController) GetUser(c *gin.Context) {
-	id := c.Param("username")
-	if id == "" {
+	username := c.Param("username")
+
+	if len(username) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorIDNull})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": "user"})
+
+	user, err := uc.repository.Get(username)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorGettingUserById})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }
