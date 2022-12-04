@@ -31,7 +31,14 @@ func NewUserController(db *ent.Client) UserControllerInterface {
 }
 
 func (ctrl *UserController) Create(c *gin.Context) {
-	user, err := ctrl.repository.Create()
+	var postUser *User
+	err := c.BindJSON(&postUser)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
+		return
+	}
+
+	user, err := ctrl.repository.Create(postUser)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
 		return
@@ -54,5 +61,5 @@ func (ctrl *UserController) GetByUsername(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	c.JSON(http.StatusOK, gin.H{"data": toPublicUser(user)})
 }

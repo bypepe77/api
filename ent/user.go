@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/bypepe77/api/ent/user"
@@ -19,6 +20,18 @@ type User struct {
 	Age int `json:"age,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// Username holds the value of the "username" field.
+	Username string `json:"username,omitempty"`
+	// Password holds the value of the "password" field.
+	Password string `json:"password,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// Active holds the value of the "active" field.
+	Active bool `json:"active,omitempty"`
+	// FollowsCount holds the value of the "follows_count" field.
+	FollowsCount int `json:"follows_count,omitempty"`
+	// FollowingCount holds the value of the "following_count" field.
+	FollowingCount int `json:"following_count,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -26,10 +39,14 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldAge:
+		case user.FieldActive:
+			values[i] = new(sql.NullBool)
+		case user.FieldID, user.FieldAge, user.FieldFollowsCount, user.FieldFollowingCount:
 			values[i] = new(sql.NullInt64)
-		case user.FieldName:
+		case user.FieldName, user.FieldUsername, user.FieldPassword:
 			values[i] = new(sql.NullString)
+		case user.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type User", columns[i])
 		}
@@ -62,6 +79,42 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				u.Name = value.String
+			}
+		case user.FieldUsername:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field username", values[i])
+			} else if value.Valid {
+				u.Username = value.String
+			}
+		case user.FieldPassword:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field password", values[i])
+			} else if value.Valid {
+				u.Password = value.String
+			}
+		case user.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				u.CreatedAt = value.Time
+			}
+		case user.FieldActive:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field active", values[i])
+			} else if value.Valid {
+				u.Active = value.Bool
+			}
+		case user.FieldFollowsCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field follows_count", values[i])
+			} else if value.Valid {
+				u.FollowsCount = int(value.Int64)
+			}
+		case user.FieldFollowingCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field following_count", values[i])
+			} else if value.Valid {
+				u.FollowingCount = int(value.Int64)
 			}
 		}
 	}
@@ -96,6 +149,24 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(u.Name)
+	builder.WriteString(", ")
+	builder.WriteString("username=")
+	builder.WriteString(u.Username)
+	builder.WriteString(", ")
+	builder.WriteString("password=")
+	builder.WriteString(u.Password)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(u.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("active=")
+	builder.WriteString(fmt.Sprintf("%v", u.Active))
+	builder.WriteString(", ")
+	builder.WriteString("follows_count=")
+	builder.WriteString(fmt.Sprintf("%v", u.FollowsCount))
+	builder.WriteString(", ")
+	builder.WriteString("following_count=")
+	builder.WriteString(fmt.Sprintf("%v", u.FollowingCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

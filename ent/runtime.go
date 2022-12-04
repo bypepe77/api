@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"time"
+
 	"github.com/bypepe77/api/ent/schema"
 	"github.com/bypepe77/api/ent/user"
 )
@@ -21,4 +23,46 @@ func init() {
 	userDescName := userFields[1].Descriptor()
 	// user.DefaultName holds the default value on creation for the name field.
 	user.DefaultName = userDescName.Default.(string)
+	// userDescUsername is the schema descriptor for username field.
+	userDescUsername := userFields[2].Descriptor()
+	// user.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
+	user.UsernameValidator = func() func(string) error {
+		validators := userDescUsername.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(username string) error {
+			for _, fn := range fns {
+				if err := fn(username); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// userDescPassword is the schema descriptor for password field.
+	userDescPassword := userFields[3].Descriptor()
+	// user.DefaultPassword holds the default value on creation for the password field.
+	user.DefaultPassword = userDescPassword.Default.(string)
+	// userDescCreatedAt is the schema descriptor for created_at field.
+	userDescCreatedAt := userFields[4].Descriptor()
+	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
+	// userDescActive is the schema descriptor for active field.
+	userDescActive := userFields[5].Descriptor()
+	// user.DefaultActive holds the default value on creation for the active field.
+	user.DefaultActive = userDescActive.Default.(bool)
+	// userDescFollowsCount is the schema descriptor for follows_count field.
+	userDescFollowsCount := userFields[6].Descriptor()
+	// user.DefaultFollowsCount holds the default value on creation for the follows_count field.
+	user.DefaultFollowsCount = userDescFollowsCount.Default.(int)
+	// user.FollowsCountValidator is a validator for the "follows_count" field. It is called by the builders before save.
+	user.FollowsCountValidator = userDescFollowsCount.Validators[0].(func(int) error)
+	// userDescFollowingCount is the schema descriptor for following_count field.
+	userDescFollowingCount := userFields[7].Descriptor()
+	// user.DefaultFollowingCount holds the default value on creation for the following_count field.
+	user.DefaultFollowingCount = userDescFollowingCount.Default.(int)
+	// user.FollowingCountValidator is a validator for the "following_count" field. It is called by the builders before save.
+	user.FollowingCountValidator = userDescFollowingCount.Validators[0].(func(int) error)
 }

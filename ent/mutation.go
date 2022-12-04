@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/bypepe77/api/ent/predicate"
 	"github.com/bypepe77/api/ent/user"
@@ -29,16 +30,24 @@ const (
 // UserMutation represents an operation that mutates the User nodes in the graph.
 type UserMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	age           *int
-	addage        *int
-	name          *string
-	clearedFields map[string]struct{}
-	done          bool
-	oldValue      func(context.Context) (*User, error)
-	predicates    []predicate.User
+	op                 Op
+	typ                string
+	id                 *int
+	age                *int
+	addage             *int
+	name               *string
+	username           *string
+	password           *string
+	created_at         *time.Time
+	active             *bool
+	follows_count      *int
+	addfollows_count   *int
+	following_count    *int
+	addfollowing_count *int
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*User, error)
+	predicates         []predicate.User
 }
 
 var _ ent.Mutation = (*UserMutation)(nil)
@@ -231,6 +240,262 @@ func (m *UserMutation) ResetName() {
 	m.name = nil
 }
 
+// SetUsername sets the "username" field.
+func (m *UserMutation) SetUsername(s string) {
+	m.username = &s
+}
+
+// Username returns the value of the "username" field in the mutation.
+func (m *UserMutation) Username() (r string, exists bool) {
+	v := m.username
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUsername returns the old "username" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldUsername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUsername is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUsername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUsername: %w", err)
+	}
+	return oldValue.Username, nil
+}
+
+// ResetUsername resets all changes to the "username" field.
+func (m *UserMutation) ResetUsername() {
+	m.username = nil
+}
+
+// SetPassword sets the "password" field.
+func (m *UserMutation) SetPassword(s string) {
+	m.password = &s
+}
+
+// Password returns the value of the "password" field in the mutation.
+func (m *UserMutation) Password() (r string, exists bool) {
+	v := m.password
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPassword returns the old "password" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldPassword(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPassword is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPassword requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPassword: %w", err)
+	}
+	return oldValue.Password, nil
+}
+
+// ResetPassword resets all changes to the "password" field.
+func (m *UserMutation) ResetPassword() {
+	m.password = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *UserMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *UserMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *UserMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetActive sets the "active" field.
+func (m *UserMutation) SetActive(b bool) {
+	m.active = &b
+}
+
+// Active returns the value of the "active" field in the mutation.
+func (m *UserMutation) Active() (r bool, exists bool) {
+	v := m.active
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActive returns the old "active" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldActive(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActive is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActive requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActive: %w", err)
+	}
+	return oldValue.Active, nil
+}
+
+// ResetActive resets all changes to the "active" field.
+func (m *UserMutation) ResetActive() {
+	m.active = nil
+}
+
+// SetFollowsCount sets the "follows_count" field.
+func (m *UserMutation) SetFollowsCount(i int) {
+	m.follows_count = &i
+	m.addfollows_count = nil
+}
+
+// FollowsCount returns the value of the "follows_count" field in the mutation.
+func (m *UserMutation) FollowsCount() (r int, exists bool) {
+	v := m.follows_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFollowsCount returns the old "follows_count" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldFollowsCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFollowsCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFollowsCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFollowsCount: %w", err)
+	}
+	return oldValue.FollowsCount, nil
+}
+
+// AddFollowsCount adds i to the "follows_count" field.
+func (m *UserMutation) AddFollowsCount(i int) {
+	if m.addfollows_count != nil {
+		*m.addfollows_count += i
+	} else {
+		m.addfollows_count = &i
+	}
+}
+
+// AddedFollowsCount returns the value that was added to the "follows_count" field in this mutation.
+func (m *UserMutation) AddedFollowsCount() (r int, exists bool) {
+	v := m.addfollows_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetFollowsCount resets all changes to the "follows_count" field.
+func (m *UserMutation) ResetFollowsCount() {
+	m.follows_count = nil
+	m.addfollows_count = nil
+}
+
+// SetFollowingCount sets the "following_count" field.
+func (m *UserMutation) SetFollowingCount(i int) {
+	m.following_count = &i
+	m.addfollowing_count = nil
+}
+
+// FollowingCount returns the value of the "following_count" field in the mutation.
+func (m *UserMutation) FollowingCount() (r int, exists bool) {
+	v := m.following_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFollowingCount returns the old "following_count" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldFollowingCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFollowingCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFollowingCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFollowingCount: %w", err)
+	}
+	return oldValue.FollowingCount, nil
+}
+
+// AddFollowingCount adds i to the "following_count" field.
+func (m *UserMutation) AddFollowingCount(i int) {
+	if m.addfollowing_count != nil {
+		*m.addfollowing_count += i
+	} else {
+		m.addfollowing_count = &i
+	}
+}
+
+// AddedFollowingCount returns the value that was added to the "following_count" field in this mutation.
+func (m *UserMutation) AddedFollowingCount() (r int, exists bool) {
+	v := m.addfollowing_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetFollowingCount resets all changes to the "following_count" field.
+func (m *UserMutation) ResetFollowingCount() {
+	m.following_count = nil
+	m.addfollowing_count = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -250,12 +515,30 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 8)
 	if m.age != nil {
 		fields = append(fields, user.FieldAge)
 	}
 	if m.name != nil {
 		fields = append(fields, user.FieldName)
+	}
+	if m.username != nil {
+		fields = append(fields, user.FieldUsername)
+	}
+	if m.password != nil {
+		fields = append(fields, user.FieldPassword)
+	}
+	if m.created_at != nil {
+		fields = append(fields, user.FieldCreatedAt)
+	}
+	if m.active != nil {
+		fields = append(fields, user.FieldActive)
+	}
+	if m.follows_count != nil {
+		fields = append(fields, user.FieldFollowsCount)
+	}
+	if m.following_count != nil {
+		fields = append(fields, user.FieldFollowingCount)
 	}
 	return fields
 }
@@ -269,6 +552,18 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Age()
 	case user.FieldName:
 		return m.Name()
+	case user.FieldUsername:
+		return m.Username()
+	case user.FieldPassword:
+		return m.Password()
+	case user.FieldCreatedAt:
+		return m.CreatedAt()
+	case user.FieldActive:
+		return m.Active()
+	case user.FieldFollowsCount:
+		return m.FollowsCount()
+	case user.FieldFollowingCount:
+		return m.FollowingCount()
 	}
 	return nil, false
 }
@@ -282,6 +577,18 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldAge(ctx)
 	case user.FieldName:
 		return m.OldName(ctx)
+	case user.FieldUsername:
+		return m.OldUsername(ctx)
+	case user.FieldPassword:
+		return m.OldPassword(ctx)
+	case user.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case user.FieldActive:
+		return m.OldActive(ctx)
+	case user.FieldFollowsCount:
+		return m.OldFollowsCount(ctx)
+	case user.FieldFollowingCount:
+		return m.OldFollowingCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -305,6 +612,48 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
+	case user.FieldUsername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUsername(v)
+		return nil
+	case user.FieldPassword:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPassword(v)
+		return nil
+	case user.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case user.FieldActive:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActive(v)
+		return nil
+	case user.FieldFollowsCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFollowsCount(v)
+		return nil
+	case user.FieldFollowingCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFollowingCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -316,6 +665,12 @@ func (m *UserMutation) AddedFields() []string {
 	if m.addage != nil {
 		fields = append(fields, user.FieldAge)
 	}
+	if m.addfollows_count != nil {
+		fields = append(fields, user.FieldFollowsCount)
+	}
+	if m.addfollowing_count != nil {
+		fields = append(fields, user.FieldFollowingCount)
+	}
 	return fields
 }
 
@@ -326,6 +681,10 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case user.FieldAge:
 		return m.AddedAge()
+	case user.FieldFollowsCount:
+		return m.AddedFollowsCount()
+	case user.FieldFollowingCount:
+		return m.AddedFollowingCount()
 	}
 	return nil, false
 }
@@ -341,6 +700,20 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddAge(v)
+		return nil
+	case user.FieldFollowsCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFollowsCount(v)
+		return nil
+	case user.FieldFollowingCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddFollowingCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
@@ -374,6 +747,24 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldName:
 		m.ResetName()
+		return nil
+	case user.FieldUsername:
+		m.ResetUsername()
+		return nil
+	case user.FieldPassword:
+		m.ResetPassword()
+		return nil
+	case user.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case user.FieldActive:
+		m.ResetActive()
+		return nil
+	case user.FieldFollowsCount:
+		m.ResetFollowsCount()
+		return nil
+	case user.FieldFollowingCount:
+		m.ResetFollowingCount()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

@@ -2,6 +2,10 @@
 
 package user
 
+import (
+	"time"
+)
+
 const (
 	// Label holds the string label denoting the user type in the database.
 	Label = "user"
@@ -11,6 +15,18 @@ const (
 	FieldAge = "age"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldUsername holds the string denoting the username field in the database.
+	FieldUsername = "username"
+	// FieldPassword holds the string denoting the password field in the database.
+	FieldPassword = "password"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldActive holds the string denoting the active field in the database.
+	FieldActive = "active"
+	// FieldFollowsCount holds the string denoting the follows_count field in the database.
+	FieldFollowsCount = "follows_count"
+	// FieldFollowingCount holds the string denoting the following_count field in the database.
+	FieldFollowingCount = "following_count"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 )
@@ -20,6 +36,12 @@ var Columns = []string{
 	FieldID,
 	FieldAge,
 	FieldName,
+	FieldUsername,
+	FieldPassword,
+	FieldCreatedAt,
+	FieldActive,
+	FieldFollowsCount,
+	FieldFollowingCount,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -37,4 +59,20 @@ var (
 	AgeValidator func(int) error
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
+	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
+	UsernameValidator func(string) error
+	// DefaultPassword holds the default value on creation for the "password" field.
+	DefaultPassword string
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultActive holds the default value on creation for the "active" field.
+	DefaultActive bool
+	// DefaultFollowsCount holds the default value on creation for the "follows_count" field.
+	DefaultFollowsCount int
+	// FollowsCountValidator is a validator for the "follows_count" field. It is called by the builders before save.
+	FollowsCountValidator func(int) error
+	// DefaultFollowingCount holds the default value on creation for the "following_count" field.
+	DefaultFollowingCount int
+	// FollowingCountValidator is a validator for the "following_count" field. It is called by the builders before save.
+	FollowingCountValidator func(int) error
 )

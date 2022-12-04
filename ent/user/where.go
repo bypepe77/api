@@ -3,6 +3,8 @@
 package user
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"github.com/bypepe77/api/ent/predicate"
 )
@@ -89,6 +91,48 @@ func Age(v int) predicate.User {
 func Name(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldName), v))
+	})
+}
+
+// Username applies equality check predicate on the "username" field. It's identical to UsernameEQ.
+func Username(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsername), v))
+	})
+}
+
+// Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
+func Password(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPassword), v))
+	})
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// Active applies equality check predicate on the "active" field. It's identical to ActiveEQ.
+func Active(v bool) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldActive), v))
+	})
+}
+
+// FollowsCount applies equality check predicate on the "follows_count" field. It's identical to FollowsCountEQ.
+func FollowsCount(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowingCount applies equality check predicate on the "following_count" field. It's identical to FollowingCountEQ.
+func FollowingCount(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFollowingCount), v))
 	})
 }
 
@@ -252,6 +296,410 @@ func NameEqualFold(v string) predicate.User {
 func NameContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldName), v))
+	})
+}
+
+// UsernameEQ applies the EQ predicate on the "username" field.
+func UsernameEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameNEQ applies the NEQ predicate on the "username" field.
+func UsernameNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameIn applies the In predicate on the "username" field.
+func UsernameIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldUsername), v...))
+	})
+}
+
+// UsernameNotIn applies the NotIn predicate on the "username" field.
+func UsernameNotIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldUsername), v...))
+	})
+}
+
+// UsernameGT applies the GT predicate on the "username" field.
+func UsernameGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameGTE applies the GTE predicate on the "username" field.
+func UsernameGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameLT applies the LT predicate on the "username" field.
+func UsernameLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameLTE applies the LTE predicate on the "username" field.
+func UsernameLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameContains applies the Contains predicate on the "username" field.
+func UsernameContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameHasPrefix applies the HasPrefix predicate on the "username" field.
+func UsernameHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameHasSuffix applies the HasSuffix predicate on the "username" field.
+func UsernameHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameEqualFold applies the EqualFold predicate on the "username" field.
+func UsernameEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldUsername), v))
+	})
+}
+
+// UsernameContainsFold applies the ContainsFold predicate on the "username" field.
+func UsernameContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldUsername), v))
+	})
+}
+
+// PasswordEQ applies the EQ predicate on the "password" field.
+func PasswordEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordNEQ applies the NEQ predicate on the "password" field.
+func PasswordNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordIn applies the In predicate on the "password" field.
+func PasswordIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldPassword), v...))
+	})
+}
+
+// PasswordNotIn applies the NotIn predicate on the "password" field.
+func PasswordNotIn(vs ...string) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldPassword), v...))
+	})
+}
+
+// PasswordGT applies the GT predicate on the "password" field.
+func PasswordGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordGTE applies the GTE predicate on the "password" field.
+func PasswordGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordLT applies the LT predicate on the "password" field.
+func PasswordLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordLTE applies the LTE predicate on the "password" field.
+func PasswordLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContains applies the Contains predicate on the "password" field.
+func PasswordContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasPrefix applies the HasPrefix predicate on the "password" field.
+func PasswordHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasSuffix applies the HasSuffix predicate on the "password" field.
+func PasswordHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordEqualFold applies the EqualFold predicate on the "password" field.
+func PasswordEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContainsFold applies the ContainsFold predicate on the "password" field.
+func PasswordContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPassword), v))
+	})
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+	})
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+	})
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+	})
+}
+
+// ActiveEQ applies the EQ predicate on the "active" field.
+func ActiveEQ(v bool) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldActive), v))
+	})
+}
+
+// ActiveNEQ applies the NEQ predicate on the "active" field.
+func ActiveNEQ(v bool) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldActive), v))
+	})
+}
+
+// FollowsCountEQ applies the EQ predicate on the "follows_count" field.
+func FollowsCountEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowsCountNEQ applies the NEQ predicate on the "follows_count" field.
+func FollowsCountNEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowsCountIn applies the In predicate on the "follows_count" field.
+func FollowsCountIn(vs ...int) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldFollowsCount), v...))
+	})
+}
+
+// FollowsCountNotIn applies the NotIn predicate on the "follows_count" field.
+func FollowsCountNotIn(vs ...int) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldFollowsCount), v...))
+	})
+}
+
+// FollowsCountGT applies the GT predicate on the "follows_count" field.
+func FollowsCountGT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowsCountGTE applies the GTE predicate on the "follows_count" field.
+func FollowsCountGTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowsCountLT applies the LT predicate on the "follows_count" field.
+func FollowsCountLT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowsCountLTE applies the LTE predicate on the "follows_count" field.
+func FollowsCountLTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFollowsCount), v))
+	})
+}
+
+// FollowingCountEQ applies the EQ predicate on the "following_count" field.
+func FollowingCountEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldFollowingCount), v))
+	})
+}
+
+// FollowingCountNEQ applies the NEQ predicate on the "following_count" field.
+func FollowingCountNEQ(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldFollowingCount), v))
+	})
+}
+
+// FollowingCountIn applies the In predicate on the "following_count" field.
+func FollowingCountIn(vs ...int) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.In(s.C(FieldFollowingCount), v...))
+	})
+}
+
+// FollowingCountNotIn applies the NotIn predicate on the "following_count" field.
+func FollowingCountNotIn(vs ...int) predicate.User {
+	v := make([]any, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotIn(s.C(FieldFollowingCount), v...))
+	})
+}
+
+// FollowingCountGT applies the GT predicate on the "following_count" field.
+func FollowingCountGT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldFollowingCount), v))
+	})
+}
+
+// FollowingCountGTE applies the GTE predicate on the "following_count" field.
+func FollowingCountGTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldFollowingCount), v))
+	})
+}
+
+// FollowingCountLT applies the LT predicate on the "following_count" field.
+func FollowingCountLT(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldFollowingCount), v))
+	})
+}
+
+// FollowingCountLTE applies the LTE predicate on the "following_count" field.
+func FollowingCountLTE(v int) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldFollowingCount), v))
 	})
 }
 

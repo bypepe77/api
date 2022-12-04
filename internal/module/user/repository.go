@@ -14,7 +14,7 @@ type Params struct {
 }
 
 type UserRepositoryInterface interface {
-	Create() (*ent.User, error)
+	Create(postUser *User) (*ent.User, error)
 	Get(username string) (*ent.User, error)
 }
 
@@ -28,10 +28,12 @@ func NewUserRespository(db *ent.Client) UserRepositoryInterface {
 	}
 }
 
-func (repository *UserRepository) Create() (*ent.User, error) {
+func (repository *UserRepository) Create(postUser *User) (*ent.User, error) {
 	user, err := repository.DB.User.Create().
-		SetAge(30).
-		SetName("Mario").
+		SetName(postUser.Name).
+		SetUsername(postUser.Username).
+		SetAge(postUser.Age).
+		SetPassword(postUser.Password).
 		Save(context.Background())
 	if err != nil {
 		fmt.Print("error", err)

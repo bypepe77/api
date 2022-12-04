@@ -54,6 +54,82 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
+// SetUsername sets the "username" field.
+func (uu *UserUpdate) SetUsername(s string) *UserUpdate {
+	uu.mutation.SetUsername(s)
+	return uu
+}
+
+// SetPassword sets the "password" field.
+func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
+	uu.mutation.SetPassword(s)
+	return uu
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uu *UserUpdate) SetNillablePassword(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetPassword(*s)
+	}
+	return uu
+}
+
+// SetActive sets the "active" field.
+func (uu *UserUpdate) SetActive(b bool) *UserUpdate {
+	uu.mutation.SetActive(b)
+	return uu
+}
+
+// SetNillableActive sets the "active" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableActive(b *bool) *UserUpdate {
+	if b != nil {
+		uu.SetActive(*b)
+	}
+	return uu
+}
+
+// SetFollowsCount sets the "follows_count" field.
+func (uu *UserUpdate) SetFollowsCount(i int) *UserUpdate {
+	uu.mutation.ResetFollowsCount()
+	uu.mutation.SetFollowsCount(i)
+	return uu
+}
+
+// SetNillableFollowsCount sets the "follows_count" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableFollowsCount(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetFollowsCount(*i)
+	}
+	return uu
+}
+
+// AddFollowsCount adds i to the "follows_count" field.
+func (uu *UserUpdate) AddFollowsCount(i int) *UserUpdate {
+	uu.mutation.AddFollowsCount(i)
+	return uu
+}
+
+// SetFollowingCount sets the "following_count" field.
+func (uu *UserUpdate) SetFollowingCount(i int) *UserUpdate {
+	uu.mutation.ResetFollowingCount()
+	uu.mutation.SetFollowingCount(i)
+	return uu
+}
+
+// SetNillableFollowingCount sets the "following_count" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableFollowingCount(i *int) *UserUpdate {
+	if i != nil {
+		uu.SetFollowingCount(*i)
+	}
+	return uu
+}
+
+// AddFollowingCount adds i to the "following_count" field.
+func (uu *UserUpdate) AddFollowingCount(i int) *UserUpdate {
+	uu.mutation.AddFollowingCount(i)
+	return uu
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -126,6 +202,21 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "age", err: fmt.Errorf(`ent: validator failed for field "User.age": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.Username(); ok {
+		if err := user.UsernameValidator(v); err != nil {
+			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.FollowsCount(); ok {
+		if err := user.FollowsCountValidator(v); err != nil {
+			return &ValidationError{Name: "follows_count", err: fmt.Errorf(`ent: validator failed for field "User.follows_count": %w`, err)}
+		}
+	}
+	if v, ok := uu.mutation.FollowingCount(); ok {
+		if err := user.FollowingCountValidator(v); err != nil {
+			return &ValidationError{Name: "following_count", err: fmt.Errorf(`ent: validator failed for field "User.following_count": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -155,6 +246,27 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Username(); ok {
+		_spec.SetField(user.FieldUsername, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Password(); ok {
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.Active(); ok {
+		_spec.SetField(user.FieldActive, field.TypeBool, value)
+	}
+	if value, ok := uu.mutation.FollowsCount(); ok {
+		_spec.SetField(user.FieldFollowsCount, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.AddedFollowsCount(); ok {
+		_spec.AddField(user.FieldFollowsCount, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.FollowingCount(); ok {
+		_spec.SetField(user.FieldFollowingCount, field.TypeInt, value)
+	}
+	if value, ok := uu.mutation.AddedFollowingCount(); ok {
+		_spec.AddField(user.FieldFollowingCount, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -199,6 +311,82 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	if s != nil {
 		uuo.SetName(*s)
 	}
+	return uuo
+}
+
+// SetUsername sets the "username" field.
+func (uuo *UserUpdateOne) SetUsername(s string) *UserUpdateOne {
+	uuo.mutation.SetUsername(s)
+	return uuo
+}
+
+// SetPassword sets the "password" field.
+func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
+	uuo.mutation.SetPassword(s)
+	return uuo
+}
+
+// SetNillablePassword sets the "password" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillablePassword(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetPassword(*s)
+	}
+	return uuo
+}
+
+// SetActive sets the "active" field.
+func (uuo *UserUpdateOne) SetActive(b bool) *UserUpdateOne {
+	uuo.mutation.SetActive(b)
+	return uuo
+}
+
+// SetNillableActive sets the "active" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableActive(b *bool) *UserUpdateOne {
+	if b != nil {
+		uuo.SetActive(*b)
+	}
+	return uuo
+}
+
+// SetFollowsCount sets the "follows_count" field.
+func (uuo *UserUpdateOne) SetFollowsCount(i int) *UserUpdateOne {
+	uuo.mutation.ResetFollowsCount()
+	uuo.mutation.SetFollowsCount(i)
+	return uuo
+}
+
+// SetNillableFollowsCount sets the "follows_count" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableFollowsCount(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetFollowsCount(*i)
+	}
+	return uuo
+}
+
+// AddFollowsCount adds i to the "follows_count" field.
+func (uuo *UserUpdateOne) AddFollowsCount(i int) *UserUpdateOne {
+	uuo.mutation.AddFollowsCount(i)
+	return uuo
+}
+
+// SetFollowingCount sets the "following_count" field.
+func (uuo *UserUpdateOne) SetFollowingCount(i int) *UserUpdateOne {
+	uuo.mutation.ResetFollowingCount()
+	uuo.mutation.SetFollowingCount(i)
+	return uuo
+}
+
+// SetNillableFollowingCount sets the "following_count" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableFollowingCount(i *int) *UserUpdateOne {
+	if i != nil {
+		uuo.SetFollowingCount(*i)
+	}
+	return uuo
+}
+
+// AddFollowingCount adds i to the "following_count" field.
+func (uuo *UserUpdateOne) AddFollowingCount(i int) *UserUpdateOne {
+	uuo.mutation.AddFollowingCount(i)
 	return uuo
 }
 
@@ -287,6 +475,21 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "age", err: fmt.Errorf(`ent: validator failed for field "User.age": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.Username(); ok {
+		if err := user.UsernameValidator(v); err != nil {
+			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "User.username": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.FollowsCount(); ok {
+		if err := user.FollowsCountValidator(v); err != nil {
+			return &ValidationError{Name: "follows_count", err: fmt.Errorf(`ent: validator failed for field "User.follows_count": %w`, err)}
+		}
+	}
+	if v, ok := uuo.mutation.FollowingCount(); ok {
+		if err := user.FollowingCountValidator(v); err != nil {
+			return &ValidationError{Name: "following_count", err: fmt.Errorf(`ent: validator failed for field "User.following_count": %w`, err)}
+		}
+	}
 	return nil
 }
 
@@ -333,6 +536,27 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Username(); ok {
+		_spec.SetField(user.FieldUsername, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Password(); ok {
+		_spec.SetField(user.FieldPassword, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.Active(); ok {
+		_spec.SetField(user.FieldActive, field.TypeBool, value)
+	}
+	if value, ok := uuo.mutation.FollowsCount(); ok {
+		_spec.SetField(user.FieldFollowsCount, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.AddedFollowsCount(); ok {
+		_spec.AddField(user.FieldFollowsCount, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.FollowingCount(); ok {
+		_spec.SetField(user.FieldFollowingCount, field.TypeInt, value)
+	}
+	if value, ok := uuo.mutation.AddedFollowingCount(); ok {
+		_spec.AddField(user.FieldFollowingCount, field.TypeInt, value)
 	}
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues

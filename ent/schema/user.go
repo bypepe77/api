@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 )
@@ -17,6 +19,24 @@ func (User) Fields() []ent.Field {
 			Positive(),
 		field.String("name").
 			Default("unknown"),
+		field.String("username").
+			Unique().
+			NotEmpty().
+			MaxLen(25),
+		field.String("password").
+			NotEmpty().
+			Default("unknown"),
+		field.Time("created_at").
+			Immutable().
+			Default(time.Now),
+		field.Bool("active").
+			Default(false),
+		field.Int("follows_count").
+			Positive().
+			Default(1),
+		field.Int("following_count").
+			Positive().
+			Default(1),
 	}
 }
 
