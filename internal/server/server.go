@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/bypepe77/api/ent"
 	"github.com/bypepe77/api/internal/module/posts"
 	"github.com/bypepe77/api/internal/module/user"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 )
 
 type Server struct {
 	config *Config
-	db     gorm.DB
+	db     *ent.Client
 	log    *logrus.Logger
 	engine *gin.Engine
 }
 
-func NewServer(config *Config, db gorm.DB, log *logrus.Logger) *Server {
+func NewServer(config *Config, db *ent.Client, log *logrus.Logger) *Server {
 	return &Server{
 		config: config,
 		db:     db,

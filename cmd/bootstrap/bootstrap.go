@@ -15,7 +15,9 @@ func Run() error {
 		return err
 	}
 
-	db := database.DatabaseConection()
+	//db := database.DatabaseConectionGorm()
+
+	db := database.DatabaseConnectionEnt()
 
 	config := server.NewConfig("Test Api", "localhost", "8080")
 

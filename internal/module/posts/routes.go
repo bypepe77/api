@@ -1,19 +1,19 @@
 package posts
 
 import (
+	"github.com/bypepe77/api/ent"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 )
 
 type UserPostController struct {
 	log            *logrus.Logger
-	db             gorm.DB
+	db             *ent.Client
 	r              gin.RouterGroup
 	postController PostControllerInterface
 }
 
-func NewPostRouteController(log *logrus.Logger, db gorm.DB, r gin.RouterGroup) *UserPostController {
+func NewPostRouteController(log *logrus.Logger, db *ent.Client, r gin.RouterGroup) *UserPostController {
 	return &UserPostController{
 		log:            log,
 		db:             db,

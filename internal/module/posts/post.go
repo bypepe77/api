@@ -3,8 +3,8 @@ package posts
 import (
 	"net/http"
 
+	"github.com/bypepe77/api/ent"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type PostControllerInterface interface {
@@ -12,10 +12,10 @@ type PostControllerInterface interface {
 }
 
 type PostController struct {
-	DB gorm.DB
+	DB *ent.Client
 }
 
-func NewPostController(db gorm.DB) PostControllerInterface {
+func NewPostController(db *ent.Client) PostControllerInterface {
 	return &PostController{
 		DB: db,
 	}

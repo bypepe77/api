@@ -3,9 +3,9 @@ package user
 import (
 	"net/http"
 
+	"github.com/bypepe77/api/ent"
 	"github.com/bypepe77/api/internal/common/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 const (
@@ -20,11 +20,11 @@ type UserControllerInterface interface {
 }
 
 type UserController struct {
-	DB         gorm.DB
+	DB         *ent.Client
 	repository UserRepositoryInterface
 }
 
-func NewUserController(db gorm.DB) UserControllerInterface {
+func NewUserController(db *ent.Client) UserControllerInterface {
 	return &UserController{
 		DB:         db,
 		repository: NewUserRespository(db),
@@ -38,12 +38,7 @@ func (uc *UserController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
 	}
 
-	user, err := uc.repository.Create(requestBody)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	c.JSON(http.StatusOK, gin.H{"data": "user"})
 
 }
 
@@ -53,15 +48,5 @@ func (uc *UserController) GetUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorIDNull})
 		return
 	}
-	params := &Params{
-		key:   "id",
-		value: id,
-	}
-	user, err := uc.repository.GetBy(params)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorGettingUserById})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	c.JSON(http.StatusOK, gin.H{"data": "user"})
 }
