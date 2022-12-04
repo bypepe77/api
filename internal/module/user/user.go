@@ -15,7 +15,7 @@ const (
 
 type UserControllerInterface interface {
 	Create(c *gin.Context)
-	GetUser(c *gin.Context)
+	GetByUsername(c *gin.Context)
 }
 
 type UserController struct {
@@ -30,8 +30,8 @@ func NewUserController(db *ent.Client) UserControllerInterface {
 	}
 }
 
-func (uc *UserController) Create(c *gin.Context) {
-	user, err := uc.repository.Create()
+func (ctrl *UserController) Create(c *gin.Context) {
+	user, err := ctrl.repository.Create()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
 		return
@@ -40,7 +40,7 @@ func (uc *UserController) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func (uc *UserController) GetUser(c *gin.Context) {
+func (ctrl *UserController) GetByUsername(c *gin.Context) {
 	username := c.Param("username")
 
 	if len(username) == 0 {
@@ -48,7 +48,7 @@ func (uc *UserController) GetUser(c *gin.Context) {
 		return
 	}
 
-	user, err := uc.repository.Get(username)
+	user, err := ctrl.repository.Get(username)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorGettingUserById})
 		return
