@@ -27,7 +27,10 @@ func NewUserRespository(db *ent.Client) UserRepositoryInterface {
 }
 
 func (repository *UserRepository) Create() (*ent.User, error) {
-	user, err := repository.DB.User.Create().SetAge(30).SetName("Mario").Save(context.Background())
+	user, err := repository.DB.User.Create().
+		SetAge(30).
+		SetName("Mario").
+		Save(context.Background())
 	if err != nil {
 		fmt.Print("error", err)
 		return nil, fmt.Errorf("failed creating user: %w", err)
