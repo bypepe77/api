@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/bypepe77/api/ent"
-	"github.com/bypepe77/api/internal/common/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,13 +31,6 @@ func NewUserController(db *ent.Client) UserControllerInterface {
 }
 
 func (uc *UserController) Create(c *gin.Context) {
-	var requestBody *models.User
-
-	if err := c.BindJSON(&requestBody); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
-		return
-	}
-
 	user, err := uc.repository.Create()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
