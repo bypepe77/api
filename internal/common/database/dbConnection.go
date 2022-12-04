@@ -43,7 +43,7 @@ func DatabaseConnectionEnt() *ent.Client {
 	if err != nil {
 		log.Fatalf("failed opening connection to mysql: %v", err)
 	}
-	defer client.Close()
+
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}

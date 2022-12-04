@@ -36,10 +36,16 @@ func (uc *UserController) Create(c *gin.Context) {
 
 	if err := c.BindJSON(&requestBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": "user"})
+	user, err := uc.repository.Create()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorCreatingUser})
+		return
+	}
 
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
 func (uc *UserController) GetUser(c *gin.Context) {
