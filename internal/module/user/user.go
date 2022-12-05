@@ -9,7 +9,7 @@ import (
 
 const (
 	ErrorCreatingUser    = "Error creating user"
-	ErrorIDNull          = "ID can't be blank"
+	ErrorUsernameNull    = "Username can't be blank"
 	ErrorGettingUserById = "User not found"
 )
 
@@ -51,7 +51,7 @@ func (ctrl *UserController) GetByUsername(c *gin.Context) {
 	username := c.Param("username")
 
 	if len(username) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorIDNull})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrorUsernameNull})
 		return
 	}
 
@@ -62,4 +62,9 @@ func (ctrl *UserController) GetByUsername(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": toPublicUser(user)})
+}
+
+func returnJson(c *gin.Context, status int, name string, data interface{}) {
+	c.JSON(status, gin.H{name: data})
+	return
 }
