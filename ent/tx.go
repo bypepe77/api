@@ -14,6 +14,10 @@ type Tx struct {
 	config
 	// Follows is the client for interacting with the Follows builders.
 	Follows *FollowsClient
+	// Likes is the client for interacting with the Likes builders.
+	Likes *LikesClient
+	// Post is the client for interacting with the Post builders.
+	Post *PostClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -148,6 +152,8 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Follows = NewFollowsClient(tx.config)
+	tx.Likes = NewLikesClient(tx.config)
+	tx.Post = NewPostClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

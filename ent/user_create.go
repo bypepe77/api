@@ -10,6 +10,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/bypepe77/api/ent/post"
 	"github.com/bypepe77/api/ent/user"
 )
 
@@ -144,6 +145,21 @@ func (uc *UserCreate) AddFollowing(u ...*User) *UserCreate {
 		ids[i] = u[i].ID
 	}
 	return uc.AddFollowingIDs(ids...)
+}
+
+// AddLikedPostIDs adds the "liked_posts" edge to the Post entity by IDs.
+func (uc *UserCreate) AddLikedPostIDs(ids ...int) *UserCreate {
+	uc.mutation.AddLikedPostIDs(ids...)
+	return uc
+}
+
+// AddLikedPosts adds the "liked_posts" edges to the Post entity.
+func (uc *UserCreate) AddLikedPosts(p ...*Post) *UserCreate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uc.AddLikedPostIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -395,6 +411,29 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.LikedPostsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &LikesCreate{config: uc.config, mutation: newLikesMutation(uc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

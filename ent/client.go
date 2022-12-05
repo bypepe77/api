@@ -11,6 +11,8 @@ import (
 	"github.com/bypepe77/api/ent/migrate"
 
 	"github.com/bypepe77/api/ent/follows"
+	"github.com/bypepe77/api/ent/likes"
+	"github.com/bypepe77/api/ent/post"
 	"github.com/bypepe77/api/ent/user"
 
 	"entgo.io/ent/dialect"
@@ -25,6 +27,10 @@ type Client struct {
 	Schema *migrate.Schema
 	// Follows is the client for interacting with the Follows builders.
 	Follows *FollowsClient
+	// Likes is the client for interacting with the Likes builders.
+	Likes *LikesClient
+	// Post is the client for interacting with the Post builders.
+	Post *PostClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -41,6 +47,8 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Follows = NewFollowsClient(c.config)
+	c.Likes = NewLikesClient(c.config)
+	c.Post = NewPostClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -76,6 +84,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:     ctx,
 		config:  cfg,
 		Follows: NewFollowsClient(cfg),
+		Likes:   NewLikesClient(cfg),
+		Post:    NewPostClient(cfg),
 		User:    NewUserClient(cfg),
 	}, nil
 }
@@ -97,6 +107,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:     ctx,
 		config:  cfg,
 		Follows: NewFollowsClient(cfg),
+		Likes:   NewLikesClient(cfg),
+		Post:    NewPostClient(cfg),
 		User:    NewUserClient(cfg),
 	}, nil
 }
@@ -127,6 +139,8 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Follows.Use(hooks...)
+	c.Likes.Use(hooks...)
+	c.Post.Use(hooks...)
 	c.User.Use(hooks...)
 }
 
@@ -218,6 +232,217 @@ func (c *FollowsClient) GetX(ctx context.Context, id int) *Follows {
 // Hooks returns the client hooks.
 func (c *FollowsClient) Hooks() []Hook {
 	return c.hooks.Follows
+}
+
+// LikesClient is a client for the Likes schema.
+type LikesClient struct {
+	config
+}
+
+// NewLikesClient returns a client for the Likes from the given config.
+func NewLikesClient(c config) *LikesClient {
+	return &LikesClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `likes.Hooks(f(g(h())))`.
+func (c *LikesClient) Use(hooks ...Hook) {
+	c.hooks.Likes = append(c.hooks.Likes, hooks...)
+}
+
+// Create returns a builder for creating a Likes entity.
+func (c *LikesClient) Create() *LikesCreate {
+	mutation := newLikesMutation(c.config, OpCreate)
+	return &LikesCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Likes entities.
+func (c *LikesClient) CreateBulk(builders ...*LikesCreate) *LikesCreateBulk {
+	return &LikesCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Likes.
+func (c *LikesClient) Update() *LikesUpdate {
+	mutation := newLikesMutation(c.config, OpUpdate)
+	return &LikesUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *LikesClient) UpdateOne(l *Likes) *LikesUpdateOne {
+	mutation := newLikesMutation(c.config, OpUpdateOne)
+	mutation.user = &l.UserID
+	mutation.tweet = &l.PostID
+	return &LikesUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Likes.
+func (c *LikesClient) Delete() *LikesDelete {
+	mutation := newLikesMutation(c.config, OpDelete)
+	return &LikesDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Query returns a query builder for Likes.
+func (c *LikesClient) Query() *LikesQuery {
+	return &LikesQuery{
+		config: c.config,
+	}
+}
+
+// QueryUser queries the user edge of a Likes.
+func (c *LikesClient) QueryUser(l *Likes) *UserQuery {
+	return c.Query().
+		Where(likes.UserID(l.UserID), likes.PostID(l.PostID)).
+		QueryUser()
+}
+
+// QueryTweet queries the tweet edge of a Likes.
+func (c *LikesClient) QueryTweet(l *Likes) *PostQuery {
+	return c.Query().
+		Where(likes.UserID(l.UserID), likes.PostID(l.PostID)).
+		QueryTweet()
+}
+
+// Hooks returns the client hooks.
+func (c *LikesClient) Hooks() []Hook {
+	return c.hooks.Likes
+}
+
+// PostClient is a client for the Post schema.
+type PostClient struct {
+	config
+}
+
+// NewPostClient returns a client for the Post from the given config.
+func NewPostClient(c config) *PostClient {
+	return &PostClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `post.Hooks(f(g(h())))`.
+func (c *PostClient) Use(hooks ...Hook) {
+	c.hooks.Post = append(c.hooks.Post, hooks...)
+}
+
+// Create returns a builder for creating a Post entity.
+func (c *PostClient) Create() *PostCreate {
+	mutation := newPostMutation(c.config, OpCreate)
+	return &PostCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Post entities.
+func (c *PostClient) CreateBulk(builders ...*PostCreate) *PostCreateBulk {
+	return &PostCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Post.
+func (c *PostClient) Update() *PostUpdate {
+	mutation := newPostMutation(c.config, OpUpdate)
+	return &PostUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PostClient) UpdateOne(po *Post) *PostUpdateOne {
+	mutation := newPostMutation(c.config, OpUpdateOne, withPost(po))
+	return &PostUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PostClient) UpdateOneID(id int) *PostUpdateOne {
+	mutation := newPostMutation(c.config, OpUpdateOne, withPostID(id))
+	return &PostUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Post.
+func (c *PostClient) Delete() *PostDelete {
+	mutation := newPostMutation(c.config, OpDelete)
+	return &PostDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PostClient) DeleteOne(po *Post) *PostDeleteOne {
+	return c.DeleteOneID(po.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PostClient) DeleteOneID(id int) *PostDeleteOne {
+	builder := c.Delete().Where(post.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PostDeleteOne{builder}
+}
+
+// Query returns a query builder for Post.
+func (c *PostClient) Query() *PostQuery {
+	return &PostQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Post entity by its id.
+func (c *PostClient) Get(ctx context.Context, id int) (*Post, error) {
+	return c.Query().Where(post.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PostClient) GetX(ctx context.Context, id int) *Post {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryAuthor queries the author edge of a Post.
+func (c *PostClient) QueryAuthor(po *Post) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := po.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(post.Table, post.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, post.AuthorTable, post.AuthorColumn),
+		)
+		fromV = sqlgraph.Neighbors(po.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLikedUsers queries the liked_users edge of a Post.
+func (c *PostClient) QueryLikedUsers(po *Post) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := po.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(post.Table, post.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, post.LikedUsersTable, post.LikedUsersPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(po.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLikes queries the likes edge of a Post.
+func (c *PostClient) QueryLikes(po *Post) *LikesQuery {
+	query := &LikesQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := po.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(post.Table, post.FieldID, id),
+			sqlgraph.To(likes.Table, likes.TweetColumn),
+			sqlgraph.Edge(sqlgraph.O2M, true, post.LikesTable, post.LikesColumn),
+		)
+		fromV = sqlgraph.Neighbors(po.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PostClient) Hooks() []Hook {
+	return c.hooks.Post
 }
 
 // UserClient is a client for the User schema.
@@ -330,6 +555,38 @@ func (c *UserClient) QueryFollowing(u *User) *UserQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FollowingTable, user.FollowingPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLikedPosts queries the liked_posts edge of a User.
+func (c *UserClient) QueryLikedPosts(u *User) *PostQuery {
+	query := &PostQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(post.Table, post.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.LikedPostsTable, user.LikedPostsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryLikes queries the likes edge of a User.
+func (c *UserClient) QueryLikes(u *User) *LikesQuery {
+	query := &LikesQuery{config: c.config}
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(likes.Table, likes.UserColumn),
+			sqlgraph.Edge(sqlgraph.O2M, true, user.LikesTable, user.LikesColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

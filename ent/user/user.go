@@ -31,12 +31,28 @@ const (
 	EdgeFollowers = "followers"
 	// EdgeFollowing holds the string denoting the following edge name in mutations.
 	EdgeFollowing = "following"
+	// EdgeLikedPosts holds the string denoting the liked_posts edge name in mutations.
+	EdgeLikedPosts = "liked_posts"
+	// EdgeLikes holds the string denoting the likes edge name in mutations.
+	EdgeLikes = "likes"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// FollowersTable is the table that holds the followers relation/edge. The primary key declared below.
 	FollowersTable = "user_following"
 	// FollowingTable is the table that holds the following relation/edge. The primary key declared below.
 	FollowingTable = "user_following"
+	// LikedPostsTable is the table that holds the liked_posts relation/edge. The primary key declared below.
+	LikedPostsTable = "likes"
+	// LikedPostsInverseTable is the table name for the Post entity.
+	// It exists in this package in order to avoid circular dependency with the "post" package.
+	LikedPostsInverseTable = "posts"
+	// LikesTable is the table that holds the likes relation/edge.
+	LikesTable = "likes"
+	// LikesInverseTable is the table name for the Likes entity.
+	// It exists in this package in order to avoid circular dependency with the "likes" package.
+	LikesInverseTable = "likes"
+	// LikesColumn is the table column denoting the likes relation/edge.
+	LikesColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -59,6 +75,9 @@ var (
 	// FollowingPrimaryKey and FollowingColumn2 are the table columns denoting the
 	// primary key for the following relation (M2M).
 	FollowingPrimaryKey = []string{"user_id", "follower_id"}
+	// LikedPostsPrimaryKey and LikedPostsColumn2 are the table columns denoting the
+	// primary key for the liked_posts relation (M2M).
+	LikedPostsPrimaryKey = []string{"user_id", "post_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).

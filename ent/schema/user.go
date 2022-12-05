@@ -46,5 +46,7 @@ func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("following", User.Type).
 			From("followers"),
+		edge.To("liked_posts", Post.Type).
+			Through("likes", Likes.Type),
 	}
 }

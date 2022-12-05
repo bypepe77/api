@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/bypepe77/api/ent/follows"
+	"github.com/bypepe77/api/ent/likes"
+	"github.com/bypepe77/api/ent/post"
 	"github.com/bypepe77/api/ent/schema"
 	"github.com/bypepe77/api/ent/user"
 )
@@ -24,6 +26,26 @@ func init() {
 	followsDescFollower := followsFields[1].Descriptor()
 	// follows.FollowerValidator is a validator for the "follower" field. It is called by the builders before save.
 	follows.FollowerValidator = followsDescFollower.Validators[0].(func(int) error)
+	likesFields := schema.Likes{}.Fields()
+	_ = likesFields
+	// likesDescLikedAt is the schema descriptor for liked_at field.
+	likesDescLikedAt := likesFields[0].Descriptor()
+	// likes.DefaultLikedAt holds the default value on creation for the liked_at field.
+	likes.DefaultLikedAt = likesDescLikedAt.Default.(func() time.Time)
+	postFields := schema.Post{}.Fields()
+	_ = postFields
+	// postDescCreatedAt is the schema descriptor for created_at field.
+	postDescCreatedAt := postFields[1].Descriptor()
+	// post.DefaultCreatedAt holds the default value on creation for the created_at field.
+	post.DefaultCreatedAt = postDescCreatedAt.Default.(func() time.Time)
+	// postDescContent is the schema descriptor for content field.
+	postDescContent := postFields[2].Descriptor()
+	// post.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	post.ContentValidator = postDescContent.Validators[0].(func(string) error)
+	// postDescShared is the schema descriptor for shared field.
+	postDescShared := postFields[5].Descriptor()
+	// post.DefaultShared holds the default value on creation for the shared field.
+	post.DefaultShared = postDescShared.Default.(bool)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescAge is the schema descriptor for age field.

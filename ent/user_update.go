@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/bypepe77/api/ent/post"
 	"github.com/bypepe77/api/ent/predicate"
 	"github.com/bypepe77/api/ent/user"
 )
@@ -160,6 +161,21 @@ func (uu *UserUpdate) AddFollowing(u ...*User) *UserUpdate {
 	return uu.AddFollowingIDs(ids...)
 }
 
+// AddLikedPostIDs adds the "liked_posts" edge to the Post entity by IDs.
+func (uu *UserUpdate) AddLikedPostIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddLikedPostIDs(ids...)
+	return uu
+}
+
+// AddLikedPosts adds the "liked_posts" edges to the Post entity.
+func (uu *UserUpdate) AddLikedPosts(p ...*Post) *UserUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uu.AddLikedPostIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -205,6 +221,27 @@ func (uu *UserUpdate) RemoveFollowing(u ...*User) *UserUpdate {
 		ids[i] = u[i].ID
 	}
 	return uu.RemoveFollowingIDs(ids...)
+}
+
+// ClearLikedPosts clears all "liked_posts" edges to the Post entity.
+func (uu *UserUpdate) ClearLikedPosts() *UserUpdate {
+	uu.mutation.ClearLikedPosts()
+	return uu
+}
+
+// RemoveLikedPostIDs removes the "liked_posts" edge to Post entities by IDs.
+func (uu *UserUpdate) RemoveLikedPostIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveLikedPostIDs(ids...)
+	return uu
+}
+
+// RemoveLikedPosts removes "liked_posts" edges to Post entities.
+func (uu *UserUpdate) RemoveLikedPosts(p ...*Post) *UserUpdate {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uu.RemoveLikedPostIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -453,6 +490,72 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if uu.mutation.LikedPostsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		createE := &LikesCreate{config: uu.config, mutation: newLikesMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.RemovedLikedPostsIDs(); len(nodes) > 0 && !uu.mutation.LikedPostsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &LikesCreate{config: uu.config, mutation: newLikesMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.LikedPostsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &LikesCreate{config: uu.config, mutation: newLikesMutation(uu.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -605,6 +708,21 @@ func (uuo *UserUpdateOne) AddFollowing(u ...*User) *UserUpdateOne {
 	return uuo.AddFollowingIDs(ids...)
 }
 
+// AddLikedPostIDs adds the "liked_posts" edge to the Post entity by IDs.
+func (uuo *UserUpdateOne) AddLikedPostIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddLikedPostIDs(ids...)
+	return uuo
+}
+
+// AddLikedPosts adds the "liked_posts" edges to the Post entity.
+func (uuo *UserUpdateOne) AddLikedPosts(p ...*Post) *UserUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uuo.AddLikedPostIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -650,6 +768,27 @@ func (uuo *UserUpdateOne) RemoveFollowing(u ...*User) *UserUpdateOne {
 		ids[i] = u[i].ID
 	}
 	return uuo.RemoveFollowingIDs(ids...)
+}
+
+// ClearLikedPosts clears all "liked_posts" edges to the Post entity.
+func (uuo *UserUpdateOne) ClearLikedPosts() *UserUpdateOne {
+	uuo.mutation.ClearLikedPosts()
+	return uuo
+}
+
+// RemoveLikedPostIDs removes the "liked_posts" edge to Post entities by IDs.
+func (uuo *UserUpdateOne) RemoveLikedPostIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveLikedPostIDs(ids...)
+	return uuo
+}
+
+// RemoveLikedPosts removes "liked_posts" edges to Post entities.
+func (uuo *UserUpdateOne) RemoveLikedPosts(p ...*Post) *UserUpdateOne {
+	ids := make([]int, len(p))
+	for i := range p {
+		ids[i] = p[i].ID
+	}
+	return uuo.RemoveLikedPostIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -926,6 +1065,72 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.LikedPostsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		createE := &LikesCreate{config: uuo.config, mutation: newLikesMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.RemovedLikedPostsIDs(); len(nodes) > 0 && !uuo.mutation.LikedPostsCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &LikesCreate{config: uuo.config, mutation: newLikesMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.LikedPostsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.LikedPostsTable,
+			Columns: user.LikedPostsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &LikesCreate{config: uuo.config, mutation: newLikesMutation(uuo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: uuo.config}

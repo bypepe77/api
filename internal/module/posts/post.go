@@ -8,7 +8,7 @@ import (
 )
 
 type PostControllerInterface interface {
-	GetPost(c *gin.Context)
+	Create(c *gin.Context)
 }
 
 type PostController struct {
@@ -21,7 +21,7 @@ func NewPostController(db *ent.Client) PostControllerInterface {
 	}
 }
 
-func (uc *PostController) GetPost(c *gin.Context) {
+func (uc *PostController) Create(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": "This is a post"})
 

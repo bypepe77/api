@@ -43,9 +43,13 @@ type UserEdges struct {
 	Followers []*User `json:"followers,omitempty"`
 	// Following holds the value of the following edge.
 	Following []*User `json:"following,omitempty"`
+	// LikedPosts holds the value of the liked_posts edge.
+	LikedPosts []*Post `json:"liked_posts,omitempty"`
+	// Likes holds the value of the likes edge.
+	Likes []*Likes `json:"likes,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [4]bool
 }
 
 // FollowersOrErr returns the Followers value or an error if the edge
@@ -64,6 +68,24 @@ func (e UserEdges) FollowingOrErr() ([]*User, error) {
 		return e.Following, nil
 	}
 	return nil, &NotLoadedError{edge: "following"}
+}
+
+// LikedPostsOrErr returns the LikedPosts value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) LikedPostsOrErr() ([]*Post, error) {
+	if e.loadedTypes[2] {
+		return e.LikedPosts, nil
+	}
+	return nil, &NotLoadedError{edge: "liked_posts"}
+}
+
+// LikesOrErr returns the Likes value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) LikesOrErr() ([]*Likes, error) {
+	if e.loadedTypes[3] {
+		return e.Likes, nil
+	}
+	return nil, &NotLoadedError{edge: "likes"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -161,6 +183,16 @@ func (u *User) QueryFollowers() *UserQuery {
 // QueryFollowing queries the "following" edge of the User entity.
 func (u *User) QueryFollowing() *UserQuery {
 	return (&UserClient{config: u.config}).QueryFollowing(u)
+}
+
+// QueryLikedPosts queries the "liked_posts" edge of the User entity.
+func (u *User) QueryLikedPosts() *PostQuery {
+	return (&UserClient{config: u.config}).QueryLikedPosts(u)
+}
+
+// QueryLikes queries the "likes" edge of the User entity.
+func (u *User) QueryLikes() *LikesQuery {
+	return (&UserClient{config: u.config}).QueryLikes(u)
 }
 
 // Update returns a builder for updating this User.

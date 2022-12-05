@@ -23,5 +23,5 @@ func NewPostRouteController(log *logrus.Logger, db *ent.Client, r gin.RouterGrou
 }
 
 func (urc *UserPostController) RegisterPostRoutes() {
-	urc.r.GET("/test", urc.postController.GetPost)
+	urc.r.POST("/create", urc.postController.Create)
 }

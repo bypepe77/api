@@ -9,5 +9,11 @@ import (
 // Follows is the predicate function for follows builders.
 type Follows func(*sql.Selector)
 
+// Likes is the predicate function for likes builders.
+type Likes func(*sql.Selector)
+
+// Post is the predicate function for post builders.
+type Post func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
