@@ -27,8 +27,16 @@ const (
 	FieldFollowsCount = "follows_count"
 	// FieldFollowingCount holds the string denoting the following_count field in the database.
 	FieldFollowingCount = "following_count"
+	// EdgeFollowers holds the string denoting the followers edge name in mutations.
+	EdgeFollowers = "followers"
+	// EdgeFollowing holds the string denoting the following edge name in mutations.
+	EdgeFollowing = "following"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// FollowersTable is the table that holds the followers relation/edge. The primary key declared below.
+	FollowersTable = "user_following"
+	// FollowingTable is the table that holds the following relation/edge. The primary key declared below.
+	FollowingTable = "user_following"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -43,6 +51,15 @@ var Columns = []string{
 	FieldFollowsCount,
 	FieldFollowingCount,
 }
+
+var (
+	// FollowersPrimaryKey and FollowersColumn2 are the table columns denoting the
+	// primary key for the followers relation (M2M).
+	FollowersPrimaryKey = []string{"user_id", "follower_id"}
+	// FollowingPrimaryKey and FollowingColumn2 are the table columns denoting the
+	// primary key for the following relation (M2M).
+	FollowingPrimaryKey = []string{"user_id", "follower_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -63,6 +80,8 @@ var (
 	UsernameValidator func(string) error
 	// DefaultPassword holds the default value on creation for the "password" field.
 	DefaultPassword string
+	// PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	PasswordValidator func(string) error
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
 	// DefaultActive holds the default value on creation for the "active" field.

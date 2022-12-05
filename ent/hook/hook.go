@@ -9,6 +9,19 @@ import (
 	"github.com/bypepe77/api/ent"
 )
 
+// The FollowsFunc type is an adapter to allow the use of ordinary
+// function as Follows mutator.
+type FollowsFunc func(context.Context, *ent.FollowsMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FollowsFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.FollowsMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FollowsMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

@@ -5,6 +5,7 @@ package ent
 import (
 	"time"
 
+	"github.com/bypepe77/api/ent/follows"
 	"github.com/bypepe77/api/ent/schema"
 	"github.com/bypepe77/api/ent/user"
 )
@@ -13,6 +14,16 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	followsFields := schema.Follows{}.Fields()
+	_ = followsFields
+	// followsDescFollowedby is the schema descriptor for followedby field.
+	followsDescFollowedby := followsFields[0].Descriptor()
+	// follows.FollowedbyValidator is a validator for the "followedby" field. It is called by the builders before save.
+	follows.FollowedbyValidator = followsDescFollowedby.Validators[0].(func(int) error)
+	// followsDescFollower is the schema descriptor for follower field.
+	followsDescFollower := followsFields[1].Descriptor()
+	// follows.FollowerValidator is a validator for the "follower" field. It is called by the builders before save.
+	follows.FollowerValidator = followsDescFollower.Validators[0].(func(int) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescAge is the schema descriptor for age field.
@@ -45,6 +56,8 @@ func init() {
 	userDescPassword := userFields[3].Descriptor()
 	// user.DefaultPassword holds the default value on creation for the password field.
 	user.DefaultPassword = userDescPassword.Default.(string)
+	// user.PasswordValidator is a validator for the "password" field. It is called by the builders before save.
+	user.PasswordValidator = userDescPassword.Validators[0].(func(string) error)
 	// userDescCreatedAt is the schema descriptor for created_at field.
 	userDescCreatedAt := userFields[4].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.

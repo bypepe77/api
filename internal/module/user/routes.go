@@ -25,4 +25,6 @@ func NewUserRouteController(log *logrus.Logger, db *ent.Client, r gin.RouterGrou
 func (urc *UserRouteController) RegisterUserRoutes() {
 	urc.r.POST("/create", urc.userController.Create)
 	urc.r.GET("/:username", urc.userController.GetByUsername)
+	urc.r.GET("/follow/:whoIWillFollow", urc.userController.Follow)
+	urc.r.GET("/unfollow/:whoIwillUnfollow", urc.userController.Unfollow)
 }
