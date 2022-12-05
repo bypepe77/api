@@ -66,7 +66,7 @@ func (ctrl *UserController) GetByUsername(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": toPublicUser(user)})
+	c.JSON(http.StatusOK, gin.H{"data": ToPublicUser(user)})
 }
 
 func (ctrl *UserController) Follow(c *gin.Context) {

@@ -14,7 +14,7 @@ type PublicUser struct {
 	FollowerCount  int    `json:"follower_count"`
 }
 
-func toPublicUser(user *ent.User) PublicUser {
+func ToPublicUser(user *ent.User) PublicUser {
 	return PublicUser{
 		Name:           user.Name,
 		Age:            user.Age,
