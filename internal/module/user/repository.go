@@ -38,7 +38,6 @@ func (repository *UserRepository) Create(postUser *User) (*ent.User, error) {
 		SetPassword(postUser.Password).
 		Save(context.Background())
 	if err != nil {
-		fmt.Print("error", err)
 		return nil, fmt.Errorf("failed creating user: %w", err)
 	}
 
@@ -51,7 +50,6 @@ func (repository *UserRepository) Get(username string) (*ent.User, error) {
 		Where(user.Username(username)).
 		Only(context.Background())
 	if err != nil {
-		fmt.Print("error", err)
 		return nil, fmt.Errorf("failed querying user: %w", err)
 	}
 
@@ -63,7 +61,6 @@ func (repository *UserRepository) Follow(userToFollow *ent.User, userWhoIsFollow
 		AddFollowerIDs(userWhoIsFollowingID).
 		Save(context.Background())
 	if err != nil {
-		fmt.Print("error", err)
 		return nil, fmt.Errorf("failed following user: %w", err)
 	}
 
@@ -75,7 +72,6 @@ func (repository *UserRepository) Unfollow(userToFollow *ent.User, userWhoIsUnfo
 		RemoveFollowerIDs(userWhoIsUnfollowingID).
 		Save(context.Background())
 	if err != nil {
-		fmt.Print("error", err)
 		return nil, fmt.Errorf("failed unfollowing user: %w", err)
 	}
 
